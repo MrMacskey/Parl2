@@ -2,9 +2,8 @@
 #include <filesystem>
 #include <string>
 #include <mpi.h>
-#include <experimental/filesystem>
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 // Формат входных файлов: 0.txt, 1.txt, 2.txt, ....
 
