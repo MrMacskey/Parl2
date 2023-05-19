@@ -2,53 +2,69 @@
 #include <filesystem>
 #include <string>
 #include <mpi.h>
+#include <experimental/filesystem>
 
-namespace fs = std::filesystem;
+namespace fs = std::experimental::filesystem;
 
-const auto INPUT_FOLDER = fs::path("C://Users/Honor/Documents/mpi_input");
-const auto OUTPUT_FOLDER = fs::path("C://Users/Honor/Documents/mpi_output");
+// Формат входных файлов: 0.txt, 1.txt, 2.txt, ....
+
+// Процесс ранга 1 будет работать с файлом 1.txt
+// Процесс ранга 2 будет работать с файлом 2.txt
+// и тд.
+
+// Тут поменяй названия папок, в которых у тебя будут входные/выходные файлы
+// И не забудь создать эти папки, иначе ошибку ебанёт :)
+const auto INPUT_FOLDER = fs::path("C://Users/Gena/Desktop/papka/mpi_input");
+const auto OUTPUT_FOLDER = fs::path("C://Users/Gena/Desktop/papka/mpi_output");
 
 fs::path append_extension(const fs::path& path, const char* ext) {
-auto sz_ext = ext;
-if ('.' == *sz_ext) ++sz_ext;
-return path.string() + "." + sz_ext;
+	auto sz_ext = ext;
+	if ('.' == *sz_ext) ++sz_ext;
+	return path.string() + "." + sz_ext;
 }
 
 void processFile(const fs::path& filePath) {
-std::ifstream ifs{ filePath };
-std::ofstream ofs{ OUTPUT_FOLDER / append_extension(filePath.filename(), "res") };
+	std::ifstream ifs{ filePath };
+	std::ofstream ofs{ OUTPUT_FOLDER / append_extension(filePath.filename(), "res") };
 
-int n;
-ifs » n;
-int* a = new int[n];
-for (int i = 0; i < n; i++)
-ifs » a[i];
-int b;
-for (int i = 0; i < n - 1; i++) // i - номер прохода
-{
-for (int j = 0; j < n - 1; j++) // внутренний цикл прохода
-{
-if (a[j + 1] < a[j])
-{
-b = a[j + 1];
-a[j + 1] = a[j];
-a[j] = b;
-}
-}
-}
-for (int i = 0; i < n; i++)
-ofs « a[i] « " ";
+	// Тут всё, как обычно, забудь про mpi
+	// Вместо std::cin у тебя ifs
+	// Вместо std::cout у тебя ofs
+
+	// Здесь пишешь всю херню, которая будет обрабатывать данные из конкретного файла, аля сортировки и прочая мишура...
+
+	// эту хрень надо удалить, ибо это решение моего задания (оставил, чисто для примера)
+	int n;
+	ifs >> n;
+	int* a = new int[n];
+	for (int i = 0; i < n; i++)
+		ifs >> a[i];
+	int b;
+	for (int i = 0; i < n - 1; i++) // i - номер прохода
+	{
+		for (int j = 0; j < n - 1; j++) // внутренний цикл прохода
+		{
+			if (a[j + 1] < a[j])
+			{
+				b = a[j + 1];
+				a[j + 1] = a[j];
+				a[j] = b;
+			}
+		}
+	}
+	for (int i = 0; i < n; i++)
+		ofs << a[i] << " ";
 }
 
 int main(int argc, char** argv)
 {
-int rank = 0;
+	int rank = 0;
 
-MPI_Init(&argc, &argv);
-MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	MPI_Init(&argc, &argv);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-auto p = INPUT_FOLDER / (std::to_string(rank) + ".txt");
-processFile(p);
+	auto p = INPUT_FOLDER / (std::to_string(rank) + ".txt");
+	processFile(p);
 
-MPI_Finalize();
+	MPI_Finalize();
 }
