@@ -6,13 +6,8 @@
 namespace fs = std::filesystem;
 
 // Формат входных файлов: 0.txt, 1.txt, 2.txt, ....
-
 // Процесс ранга 1 будет работать с файлом 1.txt
-// Процесс ранга 2 будет работать с файлом 2.txt
-// и тд.
 
-// Тут поменяй названия папок, в которых у тебя будут входные/выходные файлы
-// И не забудь создать эти папки, иначе ошибку ебанёт :)
 const auto INPUT_FOLDER = fs::path("C://Users/Gena/Desktop/papka/mpi_input");
 const auto OUTPUT_FOLDER = fs::path("C://Users/Gena/Desktop/papka/mpi_output");
 
@@ -25,14 +20,6 @@ fs::path append_extension(const fs::path& path, const char* ext) {
 void processFile(const fs::path& filePath) {
 	std::ifstream ifs{ filePath };
 	std::ofstream ofs{ OUTPUT_FOLDER / append_extension(filePath.filename(), "res") };
-
-	// Тут всё, как обычно, забудь про mpi
-	// Вместо std::cin у тебя ifs
-	// Вместо std::cout у тебя ofs
-
-	// Здесь пишешь всю херню, которая будет обрабатывать данные из конкретного файла, аля сортировки и прочая мишура...
-
-	// эту хрень надо удалить, ибо это решение моего задания (оставил, чисто для примера)
 	int n;
 	ifs >> n;
 	int* a = new int[n];
