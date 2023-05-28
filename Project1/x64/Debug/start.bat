@@ -1,0 +1,1 @@
+mpiexec -n 3 ./Project1.exe file1.txt file2.txt file3.txt
